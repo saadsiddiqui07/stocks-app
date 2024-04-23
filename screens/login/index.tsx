@@ -7,8 +7,8 @@ import {
   StatusBar,
   KeyboardAvoidingView,
 } from 'react-native';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParams} from '../../navigation/stack';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParams } from '../../navigation/stack';
 import styles from './styles';
 
 const LoginScreen = () => {
@@ -18,11 +18,11 @@ const LoginScreen = () => {
     <KeyboardAvoidingView behavior="padding" style={styles.screen}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={styles.container}>
+        <View style={styles.textContainer}>
+          <Text style={styles.headline}>Welcome Back!</Text>
+          <Text style={styles.subText}>Please login to continue</Text>
+        </View>
         <View style={styles.form}>
-          <View style={styles.textContainer}>
-            <Text style={styles.headline}>Welcome Back!</Text>
-            <Text style={styles.subText}>Please login to continue</Text>
-          </View>
           <TextInput
             style={styles.input}
             placeholderTextColor={'gray'}

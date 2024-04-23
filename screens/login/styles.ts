@@ -11,10 +11,10 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   form: {
-    marginTop: HEIGHT * 0.18,
+    marginTop: HEIGHT * 0.1,
   },
   textContainer: {
-    marginBottom: 20,
+    marginTop: 20,
   },
   headline: {
     fontWeight: '800',

@@ -5,4 +5,5 @@ export type RootStackParams = {
   Login: undefined;
   Details: { stock: StockProps };
   Orders: undefined;
+  Profile: undefined;
 };

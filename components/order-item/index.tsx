@@ -31,7 +31,7 @@ const renderProfitOrLoss = (stock: StockProps) => {
   }
 };
 
-const StockItem = (item: StockProps) => {
+const OrderStockItem = (item: StockProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   return (
     <TouchableOpacity
@@ -57,4 +57,4 @@ const StockItem = (item: StockProps) => {
   );
 };
 
-export default StockItem;
+export default OrderStockItem;

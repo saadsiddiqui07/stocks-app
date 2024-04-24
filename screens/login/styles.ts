@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {HEIGHT, WIDTH} from '../../constants';
+import { StyleSheet } from 'react-native';
+import { HEIGHT, WIDTH } from '../../constants';
 
 const styles = StyleSheet.create({
   screen: {
@@ -15,6 +15,10 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
   },
   headline: {
     fontWeight: '800',
@@ -25,7 +29,7 @@ const styles = StyleSheet.create({
   },
   subText: {
     color: '#1f2937',
-    textAlign: 'center',
+    // textAlign: 'center',
     fontSize: 12,
   },
   button: {

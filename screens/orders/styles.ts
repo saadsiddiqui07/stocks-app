@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 18,
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   },
   swipeView: {
     marginTop: 'auto',
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   swipeText: { fontWeight: '700' },
   swipeContainer: { borderWidth: 0 },

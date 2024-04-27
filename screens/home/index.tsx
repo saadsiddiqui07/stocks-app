@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   StatusBar,
@@ -18,58 +12,61 @@ import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import styles from './styles';
 import StockItem from '../../components/stock-item';
 import { StockProps } from '../../interfaces/StockProps';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Feather from 'react-native-vector-icons/Feather';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import { DUMMY_DATA, WIDTH } from '../../constants';
+import { WIDTH } from '../../constants';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import { debounce } from '../../utils';
+import { Feather, FontAwesome5, Fontisto } from '../../components/icons';
 
 const HomeScreen = () => {
+  const sheetRef = useRef<BottomSheet>(null);
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
   const [input, setInput] = useState<string>('');
-  const [data, setData] = useState<Partial<StockProps>[]>([]);
+  const [data, setData] = useState<StockProps[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const navigation = useNavigation<NavigationProp<RootStackParams>>();
-  const sheetRef = useRef<BottomSheet>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [startIndex, setStartIndex] = useState(0);
-  const batchSize = 5;
+  const [startIndex, setStartIndex] = useState<number>(0);
+  const listSize = 5;
+
+  const snapPoints = useMemo(() => ['50%', '80%', '100%'], []);
+
+  const handleSheetChange = useCallback((index: number) => {
+    setShowSearchBar(index > 0);
+  }, []);
+
+  const searchContainerStyle = useAnimatedStyle(() => {
+    return {
+      width: showSearchBar ? withTiming(WIDTH * 0.9) : withTiming(0),
+      opacity: showSearchBar ? 1 : 0,
+    };
+  });
 
   const toggleAccordion = (index: number) => {
     setExpandedIndex(index === expandedIndex ? null : index);
   };
 
-  // useEffect(() => {
-  //   handleFetchData();
-  // }, []);
-
   const handleFetchData = async () => {
     setLoading(true);
     const url =
       'https://real-time-finance-data.p.rapidapi.com/market-trends?trend_type=GAINERS&country=us&language=en';
-
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': '9f63ccf996msh2386233fa68e266p1af147jsn7fe2aeabaa76',
+        'X-RapidAPI-Key': '8babf33580msha25b0c7649b04c1p1735d5jsn209b481ca521',
         'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com',
       },
     };
-
     try {
       const response = await fetch(url, options);
       const result = await response.json();
       const allStocks = result?.data?.trends;
       loadVisibleStocks(allStocks);
-      // console.log(result?.data?.trends);
-      // setData(result.data?.trends);
     } catch (error) {
       console.error(error);
     } finally {
@@ -78,7 +75,7 @@ const HomeScreen = () => {
   };
 
   const loadVisibleStocks = (allStocks: StockProps[]) => {
-    const endIndex = startIndex + batchSize;
+    const endIndex = startIndex + listSize;
     const newVisibleStocks = allStocks.slice(startIndex, endIndex);
     setData(prevVisibleStocks => [...prevVisibleStocks, ...newVisibleStocks]);
     setLoading(false);
@@ -94,35 +91,20 @@ const HomeScreen = () => {
   const renderFooter = () => {
     return loading ? (
       <ActivityIndicator
-        style={{ marginVertical: 10 }}
-        size="large"
-        color="blue"
+        style={styles.flatListFooter}
+        size="small"
+        color="#090909"
       />
     ) : null;
   };
 
-  const searchContainerStyle = useAnimatedStyle(() => {
-    return {
-      width: showSearchBar ? withTiming(WIDTH * 0.9) : withTiming(0),
-      opacity: showSearchBar ? 1 : 0,
-    };
-  });
-
-  const snapPoints = useMemo(() => ['50%', '90%', '100%'], []);
-
-  const handleSheetChange = useCallback((index: number) => {
-    setShowSearchBar(index > 0);
-  }, []);
-
   const fetchSearchResults = async (text: string) => {
-    console.log('Query fired!', text);
-    return;
     setIsSearching(true);
     const url = `https://real-time-finance-data.p.rapidapi.com/search?query=${text}&language=en`;
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': '9f63ccf996msh2386233fa68e266p1af147jsn7fe2aeabaa76',
+        'X-RapidAPI-Key': '8babf33580msha25b0c7649b04c1p1735d5jsn209b481ca521',
         'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com',
       },
     };
@@ -151,7 +133,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <StatusBar backgroundColor={'#e2e8f0'} />
+      <StatusBar backgroundColor={'#e2e8f0'} barStyle={'dark-content'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Fontisto name="person" size={28} color={'#000'} />
@@ -185,7 +167,7 @@ const HomeScreen = () => {
               <TouchableOpacity
                 onPress={() => {
                   setInput('');
-                  setData(prevData => prevData);
+                  handleFetchData();
                 }}>
                 <Fontisto name="close-a" size={15} color={'gray'} />
               </TouchableOpacity>

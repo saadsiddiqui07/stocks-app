@@ -11,8 +11,6 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getStockSymbol } from '../../utils';
 import Colors from '../../constants/Colors';
 
@@ -21,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addStock } from '../../redux-store/actions';
 import { RootStackParams } from '../../navigation/stack';
 import styles from './styles';
+import { Ionicons, MaterialIcons } from '../../components/icons';
 
 const renderProfitOrLoss = (stock: StockProps) => {
   const hasOpenedUpside = stock.price > stock.previous_close;

@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   },
   email: {
     fontWeight: '700',
+    color: '#090909',
   },
   btn: {
     width: WIDTH * 0.8,

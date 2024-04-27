@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getStockSymbol } from '../../utils';
 import { StockProps } from '../../interfaces/StockProps';
 import Colors from '../../constants/Colors';
@@ -8,6 +7,7 @@ import styles from './styles';
 import { useDispatch } from 'react-redux';
 import { removeStock } from '../../redux-store/actions';
 import Animated, { SlideInLeft } from 'react-native-reanimated';
+import { Ionicons } from '../icons';
 
 const renderProfitOrLoss = (stock: StockProps) => {
   const hasOpenedUpside = stock.price > stock.previous_close;
@@ -46,7 +46,9 @@ const OrderStockItem = ({ index, item }: Props) => {
 
   return (
     <Animated.View
-      entering={SlideInLeft.delay(index * 1.5).springify()}
+      entering={SlideInLeft.delay(index * 1.5)
+        .springify()
+        .damping(20)}
       style={styles.container}>
       <View style={styles.logoContainer}>
         <Text style={styles.logo}>{getStockSymbol(item.symbol)[0]}</Text>

@@ -1,12 +1,18 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { WIDTH } from '../../constants';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import { setEmailPassword } from '../../redux-store/actions';
+import { Ionicons } from '../../components/icons';
 
 const ProfileScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
@@ -20,6 +26,7 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.screen}>
+      <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.backBtn}

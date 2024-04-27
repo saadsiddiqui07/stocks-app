@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: HEIGHT * 0.1,
   },
+  flatListFooter: { marginVertical: 10 },
 });
 
 export default styles;

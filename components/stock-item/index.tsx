@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import { getStockSymbol } from '../../utils';
 import { StockProps } from '../../interfaces/StockProps';
 import Colors from '../../constants/Colors';
 import styles from './styles';
+import { AntDesign, Ionicons } from '../icons';
 
 const renderProfitOrLoss = (stock: StockProps) => {
   const hasOpenedUpside = stock.price > stock.previous_close;

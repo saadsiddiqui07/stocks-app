@@ -4,15 +4,23 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  Alert,
+  StatusBar,
 } from 'react-native';
 import React, { useState } from 'react';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import styles from './styles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import OrderStockItem from '../../components/order-item';
 import SwipeButton from 'rn-swipe-button';
+import { StockProps } from '../../interfaces/StockProps';
+import notifee, {
+  AndroidImportance,
+  AndroidStyle,
+} from '@notifee/react-native';
+import { getStockSymbol } from '../../utils';
+import { MaterialIcons } from '../../components/icons';
 
 const OrdersScreen = () => {
   const stocks = useSelector((state: any) => state.stocks);
@@ -20,9 +28,43 @@ const OrdersScreen = () => {
   const [text, setText] = useState('Swipe to Buy');
   const [success, setSuccess] = useState<boolean>(false);
 
+  const sendNotifications = async (stockList: StockProps[]) => {
+    try {
+      const channelId = await notifee.createChannel({
+        id: 'stocks',
+        name: 'Stock Notifications',
+        lights: false,
+      });
+
+      const promise = stockList.map(stock => {
+        notifee.displayNotification({
+          title: 'Stock Purchase Confirmed',
+          body: `Your Purchase order for ${getStockSymbol(
+            stock.symbol,
+          )} at ${`$${stock.price.toFixed(2)}`} is completed.`,
+          android: {
+            channelId,
+            importance: AndroidImportance.HIGH,
+            style: {
+              type: AndroidStyle.BIGTEXT,
+              text: `Your Purchase order for ${getStockSymbol(
+                stock.symbol,
+              )} at ${`$${stock.price.toFixed(2)}`} is completed.`,
+            },
+          },
+        });
+      });
+      await Promise.all(promise);
+    } catch (error) {
+      Alert.alert('Some issues trying to place your order. Please try again!');
+      console.error('Error sending notifications:', error);
+    }
+  };
+
   const handleOnSuccess = () => {
     setText('Confirmed!');
     setSuccess(true);
+    sendNotifications(stocks);
     setTimeout(() => {
       navigation.navigate('Home');
       setSuccess(false);
@@ -32,15 +74,17 @@ const OrdersScreen = () => {
 
   return (
     <SafeAreaView style={styles.screen}>
+      <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backBtn}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={() => navigation.goBack()}>
             <MaterialIcons name="arrow-back" size={20} color={'#000'} />
           </TouchableOpacity>
           <Text style={styles.headerText}>Open Orders ({stocks?.length})</Text>
         </View>
+
         {stocks.length === 0 ? (
           <Text style={styles.emptyText}>There are no pending orders</Text>
         ) : (
@@ -48,7 +92,6 @@ const OrdersScreen = () => {
             <FlatList
               showsVerticalScrollIndicator={false}
               style={styles.stocks}
-              contentContainerStyle={{}}
               data={stocks}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => (

@@ -1,4 +1,3 @@
-// reducers.js
 import { StockProps } from '../interfaces/StockProps';
 import {
   SET_EMAIL_PASSWORD,

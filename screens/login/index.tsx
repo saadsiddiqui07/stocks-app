@@ -9,22 +9,33 @@ import {
 } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import styles from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { setEmailPassword } from '../../redux-store/actions';
 import { useDispatch } from 'react-redux';
+import { isValidEmail } from '../../utils';
+import { FontAwesome5, Ionicons } from '../../components/icons';
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [valid, setIsValid] = useState<boolean>(false);
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
+
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    setIsValid(isValidEmail(text));
+  };
 
   const handleLogin = () => {
     if (!email || !password) {
       Alert.alert('Please enter the credentials');
+      return;
+    }
+    if (!valid) {
+      Alert.alert('Please enter a valid email.');
       return;
     }
     dispatch(setEmailPassword(email, password));
@@ -35,7 +46,7 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+      <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <FontAwesome5 name="money-check-alt" size={40} color={'#000'} />
@@ -46,10 +57,14 @@ const LoginScreen = () => {
         </View>
         <View style={styles.form}>
           <View style={styles.row}>
-            <Ionicons name="mail-outline" size={20} color={'#000'} />
+            <Ionicons
+              name="mail-outline"
+              size={20}
+              color={email && !valid ? 'red' : '#000'}
+            />
             <TextInput
               value={email}
-              onChangeText={text => setEmail(text)}
+              onChangeText={text => handleEmailChange(text)}
               style={styles.input}
               placeholderTextColor={'gray'}
               placeholder="Enter email"

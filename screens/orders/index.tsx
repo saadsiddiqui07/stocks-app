@@ -4,62 +4,25 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-  Alert,
   StatusBar,
 } from 'react-native';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import OrderStockItem from '../../components/order-item';
 import SwipeButton from 'rn-swipe-button';
-import { StockProps } from '../../interfaces/StockProps';
-import notifee, {
-  AndroidImportance,
-  AndroidStyle,
-} from '@notifee/react-native';
-import { getStockSymbol } from '../../utils';
 import { MaterialIcons } from '../../components/icons';
+import { sendNotifications } from '../../notifications';
+import { clearStocks } from '../../redux-store/actions';
 
 const OrdersScreen = () => {
+  const dispatch = useDispatch();
   const stocks = useSelector((state: any) => state.stocks);
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [text, setText] = useState('Swipe to Buy');
   const [success, setSuccess] = useState<boolean>(false);
-
-  const sendNotifications = async (stockList: StockProps[]) => {
-    try {
-      const channelId = await notifee.createChannel({
-        id: 'stocks',
-        name: 'Stock Notifications',
-        lights: false,
-      });
-
-      const promise = stockList.map(stock => {
-        notifee.displayNotification({
-          title: 'Stock Purchase Confirmed',
-          body: `Your Purchase order for ${getStockSymbol(
-            stock.symbol,
-          )} at ${`$${stock.price.toFixed(2)}`} is completed.`,
-          android: {
-            channelId,
-            importance: AndroidImportance.HIGH,
-            style: {
-              type: AndroidStyle.BIGTEXT,
-              text: `Your Purchase order for ${getStockSymbol(
-                stock.symbol,
-              )} at ${`$${stock.price.toFixed(2)}`} is completed.`,
-            },
-          },
-        });
-      });
-      await Promise.all(promise);
-    } catch (error) {
-      Alert.alert('Some issues trying to place your order. Please try again!');
-      console.error('Error sending notifications:', error);
-    }
-  };
 
   const handleOnSuccess = () => {
     setText('Confirmed!');
@@ -69,7 +32,13 @@ const OrdersScreen = () => {
       navigation.navigate('Home');
       setSuccess(false);
       setText('Swipe to Buy');
+      dispatch(clearStocks());
     }, 1000);
+  };
+
+  const railStyles = {
+    backgroundColor: 'transparent',
+    borderColor: success ? '#34C759' : '#FFF5D1',
   };
 
   return (
@@ -110,10 +79,7 @@ const OrdersScreen = () => {
                 titleFontSize={14}
                 onSwipeStart={() => setText('Release')}
                 railBackgroundColor={success ? '#34C759' : '#FFF5D1'}
-                railStyles={{
-                  backgroundColor: 'transparent',
-                  borderColor: success ? '#34C759' : '#FFF5D1',
-                }}
+                railStyles={railStyles}
                 containerStyles={styles.swipeContainer}
                 thumbIconBorderColor="white"
                 thumbIconBackgroundColor="white"

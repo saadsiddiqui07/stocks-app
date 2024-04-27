@@ -21,10 +21,12 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import { debounce } from '../../utils';
 import { Feather, FontAwesome5, Fontisto } from '../../components/icons';
+import { useSelector } from 'react-redux';
 
 const HomeScreen = () => {
   const sheetRef = useRef<BottomSheet>(null);
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
+  const orders = useSelector((state: any) => state.stocks);
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
   const [input, setInput] = useState<string>('');
   const [data, setData] = useState<StockProps[]>([]);
@@ -138,8 +140,13 @@ const HomeScreen = () => {
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Fontisto name="person" size={28} color={'#000'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Orders')}>
+        <TouchableOpacity
+          style={styles.orders}
+          onPress={() => navigation.navigate('Orders')}>
           <Feather name="briefcase" size={28} color={'#000'} />
+          {orders.length >= 1 && (
+            <Text style={styles.count}>{orders.length}</Text>
+          )}
         </TouchableOpacity>
       </View>
       <View style={styles.textContainer}>

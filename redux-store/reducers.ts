@@ -34,9 +34,7 @@ const stocksReducer = (state = [], action: any) => {
         (stock: StockProps) => stock.symbol !== action.payload,
       );
     case CLEAR_STOCKS:
-      return {
-        state: [],
-      };
+      return [];
     default:
       return state;
   }

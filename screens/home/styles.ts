@@ -53,6 +53,12 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 15,
   },
+  orders: { flexDirection: 'row', alignItems: 'center' },
+  count: {
+    fontWeight: '800',
+    fontSize: 16,
+    color: 'royalblue',
+  },
   textContainer: {
     alignItems: 'center',
     marginTop: HEIGHT * 0.1,

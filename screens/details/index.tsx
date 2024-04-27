@@ -22,6 +22,29 @@ import { addStock } from '../../redux-store/actions';
 import { RootStackParams } from '../../navigation/stack';
 import styles from './styles';
 
+const renderProfitOrLoss = (stock: StockProps) => {
+  const hasOpenedUpside = stock.price > stock.previous_close;
+  if (hasOpenedUpside) {
+    return (
+      <View style={styles.ticker}>
+        <Ionicons name="caret-up-outline" size={22} color={Colors.profit} />
+        <Text style={{ ...styles.percentage, color: Colors.profit }}>
+          {stock.change_percent.toFixed(1)} %
+        </Text>
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.ticker}>
+        <Ionicons name="caret-down-outline" size={22} color={'red'} />
+        <Text style={{ ...styles.percentage, color: Colors.loss }}>
+          {stock.change_percent.toFixed(1)} %
+        </Text>
+      </View>
+    );
+  }
+};
+
 const DetailsScreen = () => {
   const route = useRoute();
   const { stock }: any = route.params;
@@ -56,12 +79,7 @@ const DetailsScreen = () => {
           <Text style={styles.symbol}>{getStockSymbol(stock.symbol)}</Text>
           <Text style={styles.title}>{stock.name}</Text>
           <Text style={styles.price}>$ {stock.price.toFixed(2)}</Text>
-          <View style={styles.ticker}>
-            <Ionicons name="caret-up-outline" size={22} color={Colors.profit} />
-            <Text style={{ ...styles.percentage, color: Colors.profit }}>
-              {stock.change_percent.toFixed(1)} %
-            </Text>
-          </View>
+          {renderProfitOrLoss(stock)}
         </View>
         <Text style={styles.headerText}>Lorem ipsum dolor</Text>
         <Text style={styles.subText}>

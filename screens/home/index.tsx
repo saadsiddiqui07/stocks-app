@@ -39,15 +39,22 @@ const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const sheetRef = useRef<BottomSheet>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [startIndex, setStartIndex] = useState(0);
+  const batchSize = 5;
 
   const toggleAccordion = (index: number) => {
     setExpandedIndex(index === expandedIndex ? null : index);
   };
 
+  // useEffect(() => {
+  //   handleFetchData();
+  // }, []);
+
   const handleFetchData = async () => {
     setLoading(true);
     const url =
-      'https://real-time-finance-data.p.rapidapi.com/market-trends?trend_type=GAINERS&language=en';
+      'https://real-time-finance-data.p.rapidapi.com/market-trends?trend_type=GAINERS&country=us&language=en';
+
     const options = {
       method: 'GET',
       headers: {
@@ -59,7 +66,10 @@ const HomeScreen = () => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      console.log(result?.data?.trends);
+      const allStocks = result?.data?.trends;
+      loadVisibleStocks(allStocks);
+      // console.log(result?.data?.trends);
+      // setData(result.data?.trends);
     } catch (error) {
       console.error(error);
     } finally {
@@ -67,9 +77,29 @@ const HomeScreen = () => {
     }
   };
 
-  useEffect(() => {
-    handleFetchData();
-  }, []);
+  const loadVisibleStocks = (allStocks: StockProps[]) => {
+    const endIndex = startIndex + batchSize;
+    const newVisibleStocks = allStocks.slice(startIndex, endIndex);
+    setData(prevVisibleStocks => [...prevVisibleStocks, ...newVisibleStocks]);
+    setLoading(false);
+    setStartIndex(endIndex);
+  };
+
+  const handleLoadMore = () => {
+    if (!loading) {
+      handleFetchData();
+    }
+  };
+
+  const renderFooter = () => {
+    return loading ? (
+      <ActivityIndicator
+        style={{ marginVertical: 10 }}
+        size="large"
+        color="blue"
+      />
+    ) : null;
+  };
 
   const searchContainerStyle = useAnimatedStyle(() => {
     return {
@@ -135,59 +165,57 @@ const HomeScreen = () => {
         <Text style={styles.tagLine}>Experience the Power of Investments</Text>
         <Text style={styles.subText}>Few clicks to Financial Freedom</Text>
       </View>
-      {true ? (
-        <BottomSheet
-          ref={sheetRef}
-          index={0}
-          snapPoints={snapPoints}
-          onChange={handleSheetChange}>
-          {showSearchBar ? (
-            <Animated.View style={[styles.search, searchContainerStyle]}>
-              <Fontisto name="search" size={18} color={'gray'} />
-              <TextInput
-                placeholder="Search for stocks"
-                placeholderTextColor={'gray'}
-                value={input}
-                onChangeText={handleSearch}
-                style={styles.searchInput}
-              />
-              {input && (
-                <TouchableOpacity
-                  onPress={() => {
-                    setInput('');
-                    setData(prevData => prevData);
-                  }}>
-                  <Fontisto name="close-a" size={15} color={'gray'} />
-                </TouchableOpacity>
-              )}
-            </Animated.View>
-          ) : null}
 
-          {isSearching ? (
-            <ActivityIndicator size={'large'} />
-          ) : (
-            <BottomSheetFlatList
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.listContainer}
-              data={DUMMY_DATA}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <StockItem
-                  key={index}
-                  item={item}
-                  index={index}
-                  expanded={index === expandedIndex}
-                  onToggle={toggleAccordion}
-                />
-              )}
+      <BottomSheet
+        ref={sheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        onChange={handleSheetChange}>
+        {showSearchBar ? (
+          <Animated.View style={[styles.search, searchContainerStyle]}>
+            <Fontisto name="search" size={18} color={'gray'} />
+            <TextInput
+              placeholder="Search for stocks"
+              placeholderTextColor={'gray'}
+              value={input}
+              onChangeText={handleSearch}
+              style={styles.searchInput}
             />
-          )}
-        </BottomSheet>
-      ) : (
-        <SafeAreaView style={styles.screen}>
+            {input && (
+              <TouchableOpacity
+                onPress={() => {
+                  setInput('');
+                  setData(prevData => prevData);
+                }}>
+                <Fontisto name="close-a" size={15} color={'gray'} />
+              </TouchableOpacity>
+            )}
+          </Animated.View>
+        ) : null}
+
+        {isSearching ? (
           <ActivityIndicator size={'large'} />
-        </SafeAreaView>
-      )}
+        ) : (
+          <BottomSheetFlatList
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.listContainer}
+            data={data}
+            ListFooterComponent={renderFooter}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <StockItem
+                key={index}
+                item={item}
+                index={index}
+                expanded={index === expandedIndex}
+                onToggle={toggleAccordion}
+              />
+            )}
+          />
+        )}
+      </BottomSheet>
     </SafeAreaView>
   );
 };

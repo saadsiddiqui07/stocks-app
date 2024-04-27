@@ -1,15 +1,39 @@
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import styles from './styles';
+import { WIDTH } from '../../constants';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParams } from '../../navigation/stack';
+import { setEmailPassword } from '../../redux-store/actions';
 
 const ProfileScreen = () => {
-  const { email, password } = useSelector((state: any) => state.auth);
-  console.log(email, password);
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
+  const { email } = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch(setEmailPassword('', ''));
+    navigation.navigate('Login');
+  };
 
   return (
-    <View>
-      <Text>ProfileScreen</Text>
-    </View>
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back-outline" size={20} color={'white'} />
+        </TouchableOpacity>
+        <Ionicons name="person-circle" size={WIDTH * 0.6} color={'gray'} />
+        <Text style={styles.email}>{email}</Text>
+      </View>
+
+      <TouchableOpacity style={styles.btn} onPress={logout}>
+        <Text style={styles.btnText}>Logout</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParams } from '../../navigation/stack';
 import { getStockSymbol } from '../../utils';
 import { StockProps } from '../../interfaces/StockProps';
 import Colors from '../../constants/Colors';
 import styles from './styles';
+import { useDispatch } from 'react-redux';
+import { removeStock } from '../../redux-store/actions';
+import Animated, { SlideInLeft } from 'react-native-reanimated';
 
 const renderProfitOrLoss = (stock: StockProps) => {
   const hasOpenedUpside = stock.price > stock.previous_close;
@@ -31,29 +32,43 @@ const renderProfitOrLoss = (stock: StockProps) => {
   }
 };
 
-const OrderStockItem = (item: StockProps) => {
-  const navigation = useNavigation<NavigationProp<RootStackParams>>();
+interface Props {
+  index: number;
+  item: StockProps;
+}
+
+const OrderStockItem = ({ index, item }: Props) => {
+  const dispatch = useDispatch();
+
+  const handleRemove = (symbol: string) => {
+    dispatch(removeStock(symbol));
+  };
+
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      style={styles.container}
-      onLongPress={() => console.log('Long pressed!')}
-      onPress={() => navigation.navigate('Details', { stock: item })}>
-      <Text style={styles.logo}>{getStockSymbol(item.symbol)[0]}</Text>
-      <View style={styles.details}>
-        <View style={styles.topDetails}>
-          <Text style={styles.symbol}>{getStockSymbol(item.symbol)}</Text>
-          <Text style={styles.exchange}>{item.exchange}</Text>
-        </View>
-        <Text style={styles.title} numberOfLines={1}>
-          {item.name}
-        </Text>
-        <View style={styles.pricing}>
-          <Text style={styles.price}>$ {item.price.toFixed(2)}</Text>
-          {renderProfitOrLoss(item)}
-        </View>
+    <Animated.View
+      entering={SlideInLeft.delay(index * 1.5).springify()}
+      style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Text style={styles.logo}>{getStockSymbol(item.symbol)[0]}</Text>
       </View>
-    </TouchableOpacity>
+      <View style={styles.detailsRow}>
+        <View style={styles.details}>
+          <Text style={styles.symbol}>{getStockSymbol(item.symbol)}</Text>
+          <Text style={styles.title} numberOfLines={1}>
+            {item.name}
+          </Text>
+          <View style={styles.pricing}>
+            <Text style={styles.price}>$ {item.price.toFixed(2)}</Text>
+            {renderProfitOrLoss(item)}
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => handleRemove(item.symbol)}>
+          <Ionicons name="trash-outline" size={25} color={'#000'} />
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
   );
 };
 

@@ -5,10 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { setEmailPassword } from '../../redux-store/actions';
@@ -21,8 +23,14 @@ const LoginScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const handleLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Please enter the credentials');
+      return;
+    }
     dispatch(setEmailPassword(email, password));
     navigation.navigate('Home');
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -37,21 +45,27 @@ const LoginScreen = () => {
           </View>
         </View>
         <View style={styles.form}>
-          <TextInput
-            value={email}
-            onChangeText={text => setEmail(text)}
-            style={styles.input}
-            placeholderTextColor={'gray'}
-            placeholder="Enter email"
-          />
-          <TextInput
-            value={password}
-            onChangeText={text => setPassword(text)}
-            secureTextEntry
-            style={styles.input}
-            placeholderTextColor={'gray'}
-            placeholder="Enter password"
-          />
+          <View style={styles.row}>
+            <Ionicons name="mail-outline" size={20} color={'#000'} />
+            <TextInput
+              value={email}
+              onChangeText={text => setEmail(text)}
+              style={styles.input}
+              placeholderTextColor={'gray'}
+              placeholder="Enter email"
+            />
+          </View>
+          <View style={styles.row}>
+            <Ionicons name="lock-closed-outline" size={20} color={'#000'} />
+            <TextInput
+              value={password}
+              onChangeText={text => setPassword(text)}
+              secureTextEntry
+              style={styles.input}
+              placeholderTextColor={'gray'}
+              placeholder="Enter password"
+            />
+          </View>
         </View>
       </View>
       <View style={styles.bottom}>

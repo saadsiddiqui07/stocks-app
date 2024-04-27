@@ -1,6 +1,11 @@
 // reducers.js
 import { StockProps } from '../interfaces/StockProps';
-import { SET_EMAIL_PASSWORD, ADD_STOCK, REMOVE_STOCK } from './actions';
+import {
+  SET_EMAIL_PASSWORD,
+  ADD_STOCK,
+  REMOVE_STOCK,
+  CLEAR_STOCKS,
+} from './actions';
 
 const initialState = {
   email: '',
@@ -29,6 +34,10 @@ const stocksReducer = (state = [], action: any) => {
       return state.filter(
         (stock: StockProps) => stock.symbol !== action.payload,
       );
+    case CLEAR_STOCKS:
+      return {
+        state: [],
+      };
     default:
       return state;
   }

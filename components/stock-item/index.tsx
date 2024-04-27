@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/stack';
 import { getStockSymbol } from '../../utils';
@@ -31,28 +32,57 @@ const renderProfitOrLoss = (stock: StockProps) => {
   }
 };
 
-const StockItem = (item: StockProps) => {
+interface Props {
+  item: StockProps;
+  index: number;
+  expanded: boolean;
+  onToggle: (arg1: number) => void;
+}
+
+const StockItem = ({ item, index, expanded, onToggle }: Props) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      style={styles.container}
-      onLongPress={() => console.log('Long pressed!')}
+      style={expanded ? styles.openView : styles.mainView}
+      onLongPress={() => onToggle(index)}
       onPress={() => navigation.navigate('Details', { stock: item })}>
-      <Text style={styles.logo}>{getStockSymbol(item.symbol)[0]}</Text>
-      <View style={styles.details}>
-        <View style={styles.topDetails}>
-          <Text style={styles.symbol}>{getStockSymbol(item.symbol)}</Text>
-          <Text style={styles.exchange}>{item.exchange}</Text>
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Text style={styles.logo}>{getStockSymbol(item.symbol)[0]}</Text>
         </View>
-        <Text style={styles.title} numberOfLines={1}>
-          {item.name}
-        </Text>
-        <View style={styles.pricing}>
-          <Text style={styles.price}>$ {item.price.toFixed(2)}</Text>
-          {renderProfitOrLoss(item)}
+        <View style={styles.details}>
+          <View style={styles.topDetails}>
+            <Text style={styles.symbol}>{getStockSymbol(item.symbol)}</Text>
+            {expanded ? (
+              <TouchableOpacity onPress={() => onToggle(index)}>
+                <AntDesign name="up" size={20} color={'#000'} />
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.exchange}>{item.exchange}</Text>
+            )}
+          </View>
+          <Text style={styles.title} numberOfLines={1}>
+            {item.name}
+          </Text>
+          <View style={styles.pricing}>
+            <Text style={styles.price}>$ {item.price.toFixed(2)}</Text>
+            {renderProfitOrLoss(item)}
+          </View>
         </View>
       </View>
+      {expanded && (
+        <View style={styles.textView}>
+          <Text style={styles.headerText}>Lorem ipsum dolor</Text>
+          <Text style={styles.subText}>
+            Lorem ipsum dolor Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Lorem ipsum dolor Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua.
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

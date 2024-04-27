@@ -17,7 +17,7 @@ import { getStockSymbol } from '../../utils';
 import Colors from '../../constants/Colors';
 
 import { StockProps } from '../../interfaces/StockProps';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addStock } from '../../redux-store/actions';
 import { RootStackParams } from '../../navigation/stack';
 import styles from './styles';
@@ -27,8 +27,16 @@ const DetailsScreen = () => {
   const { stock }: any = route.params;
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const dispatch = useDispatch();
+  const addedStocks = useSelector((state: any) => state.stocks);
 
   const handleAddToOrder = (item: StockProps) => {
+    const isAlreadyAdded = addedStocks.some(
+      (existingStock: StockProps) => existingStock.symbol === stock.symbol,
+    );
+    if (isAlreadyAdded) {
+      navigation.navigate('Orders');
+      return;
+    }
     dispatch(addStock(item));
     navigation.navigate('Orders');
   };
@@ -49,11 +57,7 @@ const DetailsScreen = () => {
           <Text style={styles.title}>{stock.name}</Text>
           <Text style={styles.price}>$ {stock.price.toFixed(2)}</Text>
           <View style={styles.ticker}>
-            <Ionicons
-              name="caret-down-outline"
-              size={22}
-              color={Colors.profit}
-            />
+            <Ionicons name="caret-up-outline" size={22} color={Colors.profit} />
             <Text style={{ ...styles.percentage, color: Colors.profit }}>
               {stock.change_percent.toFixed(1)} %
             </Text>

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   details: {
-    marginVertical: 10,
+    marginVertical: 30,
   },
   headerText: {
     marginTop: 15,

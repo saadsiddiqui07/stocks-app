@@ -5,19 +5,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'lightgray',
     marginHorizontal: 10,
-    gap: 35,
+    gap: 20,
+  },
+  logoContainer: {
+    backgroundColor: '#090909',
+    borderRadius: 10,
+    padding: 20,
   },
   logo: {
-    color: '#000',
+    color: '#fff',
   },
   details: {
-    flex: 1,
     gap: 5,
-    paddingRight: 10,
+    flex: 0.9,
+  },
+  detailsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  btn: {
+    marginLeft: 'auto',
   },
   topDetails: {
     flexDirection: 'row',

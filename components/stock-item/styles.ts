@@ -1,18 +1,34 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  mainView: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'lightgray',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+  },
+  openView: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'lightgray',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+
+    backgroundColor: 'lightgray',
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'lightgray',
-    marginHorizontal: 10,
     gap: 35,
+    marginHorizontal: 10,
+  },
+  logoContainer: {
+    backgroundColor: '#090909',
+    borderRadius: 10,
+    padding: 20,
   },
   logo: {
-    color: '#000',
+    color: '#fff',
+    fontWeight: '700',
   },
   details: {
     flex: 1,
@@ -58,6 +74,17 @@ const styles = StyleSheet.create({
   percentage: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  textView: {
+    marginTop: 20,
+    marginHorizontal: 10,
+  },
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  subText: {
+    fontWeight: '500',
   },
 });
 

@@ -13,6 +13,12 @@ const styles = StyleSheet.create({
   form: {
     marginTop: HEIGHT * 0.1,
   },
+  row: {
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: WIDTH * 0.8,
+  },
   textContainer: {
     marginTop: 20,
     flexDirection: 'row',
@@ -48,11 +54,11 @@ const styles = StyleSheet.create({
   },
   input: {
     color: '#000',
-    width: WIDTH * 0.8,
     marginVertical: 10,
     height: 40,
     fontSize: 15,
-    borderBottomWidth: 1,
+    marginLeft: 15,
+    flex: 1,
   },
   bottom: {
     marginTop: 'auto',

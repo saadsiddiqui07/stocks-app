@@ -5,7 +5,7 @@ export const getStockSymbol = (symbol: string): string => symbol.split(':')[0];
 export const getStockTicker = (item: StockProps): boolean =>
   item.price > item.previous_close;
 
-export const debounce = (func: () => Promise<any>, delay: number) => {
+export const debounce = (func: any, delay: number) => {
   let timeoutId: any;
 
   return (...args: any) => {

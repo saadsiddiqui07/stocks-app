@@ -14,7 +14,9 @@ const mainStyle: ViewStyle = {
 const App = () => {
   useEffect(() => {
     const init = async () => {
+      // get permission for notifications
       await notifee.requestPermission();
+      // hide screen when app loads
       SplashScreen.hide();
     };
     init();

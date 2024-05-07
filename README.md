@@ -1,9 +1,4 @@
-# The 1% Club React Native Assignment Solution
-
-## Introduction
-This repository contains the solution for The 1% Club React Native Assignment. The assignment aimed to create a mobile app using React Native that interacts with the Real Time Finance API to display stock market trends, allow user authentication, manage stock orders, and send push notifications upon successful orders.
-
-## Features Implemented
+# React Native Stocks Listing App
 
 ### Splash Screen
 - Implemented a standard splash screen behavior for iOS and Android.

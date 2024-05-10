@@ -1,6 +1,6 @@
 # React Native Stocks Listing App
 
-<img width="694" alt="Screenshot 2024-05-11 at 1 57 25 AM" src="https://github.com/saadsiddiqui07/stocks-app/assets/53810119/0230236b-c6fa-447d-8aea-0e7f8ed11dbd">
+<img width="840" alt="Screenshot 2024-05-11 at 2 09 24 AM" src="https://github.com/saadsiddiqui07/stocks-app/assets/53810119/c39dfede-4256-4c9f-90a0-08996bfeebe1">
 
 ### Splash Screen
 - Implemented a standard splash screen behavior for iOS and Android.

@@ -60,7 +60,7 @@ const HomeScreen = () => {
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': '8babf33580msha25b0c7649b04c1p1735d5jsn209b481ca521',
+        'X-RapidAPI-Key': 'YOUR_API_KEY',
         'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com',
       },
     };
@@ -106,7 +106,7 @@ const HomeScreen = () => {
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': '8babf33580msha25b0c7649b04c1p1735d5jsn209b481ca521',
+        'X-RapidAPI-Key': 'YOUR_API_KEY',
         'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com',
       },
     };
